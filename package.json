@@ -1,0 +1,21 @@
+{
+  "name": "ib_track",
+  "version": "1.0.0",
+  "description": "intelligent buildings project",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://alicenara@app.deveo.com/randomjunctionteam/projects/intelligent_buildings_track/repositories/git/ib_track"
+  },
+  "keywords": [
+    "babylonJS"
+  ],
+  "author": "welovefreestuff",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
