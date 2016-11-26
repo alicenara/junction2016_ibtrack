@@ -1,10 +1,461 @@
 <!DOCTYPE html>
-<head>
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <script src="js/babylon.2.4.js"></script>
-    <script src="js/initScene.js"></script>
-</head>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+        <!-- Babylon.js -->
+        <script src="http://www.babylonjs.com/hand.minified-1.2.js"></script>
+        <script src="http://www.babylonjs.com/cannon.js"></script>
+        <script src="http://www.babylonjs.com/oimo.js"></script>
+        <script src="http://www.babylonjs.com/babylon.js"></script>
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
 <body>
     <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+        var engine = new BABYLON.Engine(canvas, true);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//    http://www.babylonjs-playground.com/#1JSD1U#251
+
+/* var create = function (scene) {
+    var canvas = new BABYLON.ScreenSpaceCanvas2D(scene, {
+        id: "ScreenCanvas",
+        size: new BABYLON.Size(300, 100),
+        backgroundFill: "#4040408F",
+        backgroundRoundRadius: 50,
+        children: [
+            new BABYLON.Text2D(" Jokerit - Kunlun Redstart !", {
+                id: "text",
+                marginAlignment: "h: center, v:center",
+                fontName: "20pt Arial",
+            })
+        ]
+    });
+    return canvas;
+};
+*/
+
+var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 200, 300, 10, new BABYLON.Vector3(0, 10, 0), scene);
+    camera.setPosition(new BABYLON.Vector3(20, 300, 400));  //20, 200, 400
+    camera.attachControl(canvas, true);
+
+	//create(scene);
+         camera.lowerBetaLimit = 0.4;
+            camera.upperBetaLimit = (Math.PI / 2) * 0.95;
+            camera.lowerRadiusLimit = 25;
+        camera.upperRadiusLimit = 70;
+            scene.clearColor = new BABYLON.Color3(0, 0, 0);
+          //light
+       /*     var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-0.5, -1, -0.5), scene);
+            light.diffuse = new BABYLON.Color3(1, 1, 1);
+            light.specular = new BABYLON.Color3(1, 1, 1);
+            light.groundColor = new BABYLON.Color3(0, 0, 0);
+            light.position = new BABYLON.Vector3(20, 40, 20);
+        */	
+        	///
+            var light1 = new BABYLON.PointLight("omni", new BABYLON.Vector3(150, 30, -10), scene);
+            var light2 = new BABYLON.PointLight("omni", new BABYLON.Vector3(150, 30, -10), scene);
+            var light3 = new BABYLON.PointLight("omni", new BABYLON.Vector3(150, 50, -10), scene);
+        
+            light1.diffuse = BABYLON.Color3.Red();
+            light2.diffuse = BABYLON.Color3.Green();
+            light3.diffuse = BABYLON.Color3.Blue();
+        	
+        	light1.specular = new BABYLON.Color3(0, 0, 0); 
+        	light2.specular = new BABYLON.Color3(0, 0, 0);
+        	light3.specular = new BABYLON.Color3(0, 0, 0);
+        
+            // Define states
+            light1.state = "on";
+            light2.state = "on";
+            light3.state = "on";
+        
+            
+    // Ground
+    var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+    groundMaterial.diffuseTexture = new BABYLON.Texture("http://www.ppmimages.com/hockey/stadium/custom_ice/base_live.jpg", scene);
+	var ground = BABYLON.Mesh.CreateGround("ground", 80, 80, 1, scene, false);
+    //var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "http://www.babylonjs-playground.com/textures/worldHeightMap.jpg", 200, 200, 250, 0, 10, scene, false);
+    ground.material = groundMaterial;
+			/*// Ground
+    var ground = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 1, scene, false);
+    var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+    groundMaterial.specularColor = BABYLON.Color3.Black();
+    ground.material = groundMaterial; */
+        	//var materialSphere1 = new BABYLON.TerrainMaterial("terrainMaterial", scene);
+        	//var materialSphere1 = new BABYLON.StandardMaterial("texture1", scene);
+        	//materialSphere1.diffuseTexture = new BABYLON.Texture("textures/cloud.png", scene);
+        //materialSphere1.emissiveTexture = new BABYLON.Texture("textures/grass.png", scene);
+        
+        ///////////extra ground
+       /* var extraGround = BABYLON.Mesh.CreateGround("extraGround", 1000, 1000, 1, scene, false);
+        var extraGroundMaterial = new BABYLON.StandardMaterial("extraGround", scene);
+        extraGroundMaterial.diffuseTexture = new BABYLON.Texture("http://www.babylonjs-playground.com/textures/grass.png", scene);
+        extraGroundMaterial.diffuseTexture.uScale = 60;
+        extraGroundMaterial.diffuseTexture.vScale = 60;
+        extraGround.position.y = -2.55;
+        extraGroundMaterial.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+            extraGroundMaterial.specularPower = 64;
+        extraGroundMaterial.mixTexture = new BABYLON.Texture("http://www.babylonjs-playground.com/textures/mixMap.png", scene);  //textures/mixMap.png
+        extraGround.material = extraGroundMaterial;
+        extraGround.material.bumpTexture3 = new BABYLON.Texture("http://www.babylonjs-playground.com/textures/grass.png", scene);   //textures/grassn.png
+         */
+        
+        
+           //ground.material = materialSphere1;
+           // ground.material = groundMaterial;
+           /*
+           //Green working terrain
+           var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "http://www.babylonjs-playground.com/textures/heightMap.png", 100, 100, 100, 0, 10, scene, false);  //textures/heightMap.png
+        var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("http://www.babylonjs-playground.com/textures/grass.png", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground.position.y = -2.0;
+        ground.material = groundMaterial;
+           */
+		   
+           /*
+        // Create terrain material
+        	var terrainMaterial = new BABYLON.TerrainMaterial("terrainMaterial", scene);
+            terrainMaterial.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+            terrainMaterial.specularPower = 64;
+        	
+        	// Set the mix texture (represents the RGB values)
+            terrainMaterial.mixTexture = new BABYLON.Texture("textures/mixMap.png", scene);
+        	
+        	// Diffuse textures following the RGB values of the mix map
+        	// diffuseTexture1: Red
+        	// diffuseTexture2: Green
+        	// diffuseTexture3: Blue
+            terrainMaterial.diffuseTexture1 = new BABYLON.Texture("textures/grass.png", scene);
+            terrainMaterial.diffuseTexture2 = new BABYLON.Texture("textures/grass.png", scene);
+            terrainMaterial.diffuseTexture3 = new BABYLON.Texture("textures/grass.png", scene);
+            
+        	// Bump textures according to the previously set diffuse textures
+            terrainMaterial.bumpTexture1 = new BABYLON.Texture("textures/floor_bump.png", scene);
+            terrainMaterial.bumpTexture2 = new BABYLON.Texture("textures/rockn.png", scene);
+            terrainMaterial.bumpTexture3 = new BABYLON.Texture("textures/grassn.png", scene);
+           
+            // Rescale textures according to the terrain
+            terrainMaterial.diffuseTexture1.uScale = terrainMaterial.diffuseTexture1.vScale = 10;
+            terrainMaterial.diffuseTexture2.uScale = terrainMaterial.diffuseTexture2.vScale = 10;
+            terrainMaterial.diffuseTexture3.uScale = terrainMaterial.diffuseTexture3.vScale = 10;
+        	
+        	// Ground
+        	var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 100, 100, 100, 0, 10, scene, false);
+        	ground.position.y = -2.05;
+        	ground.material = terrainMaterial;
+        		
+        	
+        	
+        	*/
+        	
+        	/*
+        	//Create a square of grass using a custom procedural texture
+            var square = BABYLON.Mesh.CreateGround("square", 1000, 1000, 2, scene);
+            square.position = new BABYLON.Vector3(0, 0, 0);
+            var customMaterial = new BABYLON.StandardMaterial("custommat", scene);
+            var customProcText = new BABYLON.CustomProceduralTexture("customtext", "./textures/customProceduralTextures/land", 1024, scene);
+            customMaterial.ambientTexture = customProcText;
+            square.material = customMaterial;
+        	*/
+        		
+        
+        	/*	
+         // Skybox
+            var skybox = BABYLON.Mesh.CreateBox("skyBox", 500, scene);
+        	//skybox.infiniteDistance = true;
+        
+            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skyBox", scene);
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+            skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+            skyboxMaterial.disableLighting = true;
+            skybox.material = skyboxMaterial;
+        
+            var alpha = 0;
+            scene.registerBeforeRender(function () {
+        
+                scene.fogDensity = Math.cos(alpha) / 10;
+                alpha += 0.02;
+        
+            });
+        */
+            // Boxes
+            var redBox = BABYLON.Mesh.CreateBox("red", 2, scene);
+            var redMat = new BABYLON.StandardMaterial("ground", scene);
+            redMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            redMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            redMat.emissiveColor = BABYLON.Color3.Red();
+            redBox.material = redMat;
+            redBox.position.x -= 4;
+        	redBox.position.y += 5;
+        	redBox.position.z -= 40;
+            var greenBox = BABYLON.Mesh.CreateBox("green", 2, scene);
+            var greenMat = new BABYLON.StandardMaterial("ground", scene);
+            greenMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            greenMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            greenMat.emissiveColor = BABYLON.Color3.Green();
+            greenBox.material = greenMat;
+            //greenBox.position.x -= 15;
+        	greenBox.position.y += 5;
+        greenBox.position.z -= 40;
+            var blueBox = BABYLON.Mesh.CreateBox("blue", 2, scene);
+            var blueMat = new BABYLON.StandardMaterial("ground", scene);
+            blueMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            blueMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            blueMat.emissiveColor = BABYLON.Color3.Blue();
+        	
+        ///////////////////
+        
+        	var plan = BABYLON.Mesh.CreatePlane("plane", 20, scene);
+			//plan.state = "off";
+        	plan.position.y += 7;
+			plan.position.z -= 0;  //25;
+			plan.position.x -= 31;
+			plan.rotation.y = Math.PI / -2;
+        var mat = new BABYLON.StandardMaterial("mat", scene);
+        	var videoTexture = new BABYLON.VideoTexture("video", ["textures/babylonjs.mp4", "textures/babylonjs.webm"], scene, true, false); //textures/babylonjs.mp4
+        	mat.diffuseTexture = videoTexture;
+        	plan.material = mat;
+        	mat.backFaceCulling = false;
+        	plan.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+        		var htmlVideo = mat.diffuseTexture.video;
+        	
+        	var playing = false;
+        	/*
+        	scene.onPointerUp = function () {
+        		if (htmlVideo.paused) {
+        			htmlVideo.play();
+        			htmlVideo.playbackRate = 1;
+        			htmlVideo.currentTime = 20;
+        		} else {
+        			htmlVideo.pause();
+        		}
+        	}  */
+			   //var goToColorAction = new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPickTrigger, light, "diffuse", color, 1000, null, true);
+			   plan.actionManager = new BABYLON.ActionManager(scene);
+			   plan.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnLeftPickTrigger, function(){
+			   
+			   
+			   if (htmlVideo.paused) {
+        			htmlVideo.play();
+        			htmlVideo.playbackRate = 1;
+					htmlVideo2.pause();
+					//htmlVideo2.muted = true;
+					//htmlVideo.muted = false;
+        			//htmlVideo.currentTime = 20;
+        		} else {
+        			htmlVideo.pause();
+ 
+        		}			   
+			   }));
+				
+				
+				/////////////////////////////////////////////
+	   
+			   var plan2 = BABYLON.Mesh.CreatePlane("plane", 20, scene);
+		plan2.position.y += 7;
+			plan2.position.z -= 0;  //25;
+			plan2.position.x += 31;
+			plan2.rotation.y = Math.PI / 2;
+        var mat2 = new BABYLON.StandardMaterial("mat2", scene);
+        	var videoTexture2 = new BABYLON.VideoTexture("video", ["textures/kunlun.mp4", "textures/babylonjs.webm"], scene, true, false); //textures/babylonjs.mp4
+        	mat2.diffuseTexture = videoTexture2;
+        	plan2.material = mat2;
+        	mat2.backFaceCulling = false;
+        	plan2.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+        		var htmlVideo2 = mat2.diffuseTexture.video;
+        	
+        	var playing = false;
+        	/*
+        	scene.onPointerUp = function () {
+        		if (htmlVideo2.paused) {
+        			htmlVideo2.play();
+        			htmlVideo2.playbackRate = 1;
+        			htmlVideo2.currentTime = 20;
+        		} else {
+        			htmlVideo2.pause();
+        		}
+        	}  */
+			   //var goToColorAction = new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPickTrigger, light, "diffuse", color, 1000, null, true);
+			   plan2.actionManager = new BABYLON.ActionManager(scene);
+			   plan2.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnLeftPickTrigger, function(){
+			   
+			   
+			   if (htmlVideo2.paused) {
+        			htmlVideo2.play();
+        			htmlVideo2.playbackRate = 1;
+					htmlVideo.pause();
+					//htmlVideo.muted = true;
+					//htmlVideo2.muted = false;
+        			//htmlVideo2.currentTime = 20;
+        		} else {
+        			htmlVideo2.pause();
+					
+        		}			   
+			   }));
+				   
+
+				
+
+			   //BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnLeftPickTrigger, camera, "alpha", 0, 5000, condition1)
+			   //sphere.actionManager.registerAction(new ExecuteCodeAction(BABYLON.ActionManager.OnLeftPickTrigger, func, player1on));
+			   //var player1off = new BABYLON.StateCondition(sphere.actionManager, plan, "off");
+			   //var player1on = new BABYLON.StateCondition(sphere.actionManager, plan, "on");
+			  /* mesh.actionManager.registerAction(new BABYLON.SetStateAction(BABYLON.ActionManager.OnPickTrigger, plan, "on"))
+            .then(new BABYLON.SetStateAction(BABYLON.ActionManager.OnPickTrigger, plan, "off"));   */
+        ///////////
+        	blueBox.material = blueMat;
+            blueBox.position.x += 4;
+        	blueBox.position.y += 5;
+        	blueBox.position.z -= 40;
+        //var tiledGround = BABYLON.MeshBuilder.CreateTiledGround("tgd", {subdivsions: {w:4, h:6} }, scene);
+        
+            // Sphere
+            var sphere = BABYLON.Mesh.CreateSphere("sphere", 16, 3, scene);
+            var sphereMat = new BABYLON.StandardMaterial("ground", scene);
+            sphereMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            sphereMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            sphereMat.emissiveColor = BABYLON.Color3.Purple();
+            sphere.material = sphereMat;
+            //sphere.position.z -= 25;
+        	//sphere.position.y += 4;
+        	//sphere.position.x += 27;
+       
+    // Rotating donut
+   // var donut = BABYLON.Mesh.CreateTorus("donut", 20, 8, 16, scene);
+
+    // On pick interpolations
+    var prepareButton = function (mesh, color, light) {		
+        var goToColorAction = new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPickTrigger, light, "diffuse", color, 1000, null, true);
+
+        mesh.actionManager = new BABYLON.ActionManager(scene);
+        mesh.actionManager.registerAction(
+            new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPickTrigger, light, "diffuse", BABYLON.Color3.Black(), 1000))
+            .then(new BABYLON.CombineAction(BABYLON.ActionManager.NothingTrigger, [ // Then is used to add a child action used alternatively with the root action. 
+                goToColorAction,                                                 // First click: root action. Second click: child action. Third click: going back to root action and so on...   
+                new BABYLON.SetValueAction(BABYLON.ActionManager.NothingTrigger, mesh.material, "wireframe", false)
+            ]));
+        mesh.actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPickTrigger, mesh.material, "wireframe", true))
+            .then(new BABYLON.DoNothingAction());
+        mesh.actionManager.registerAction(new BABYLON.SetStateAction(BABYLON.ActionManager.OnPickTrigger, light, "off"))
+            .then(new BABYLON.SetStateAction(BABYLON.ActionManager.OnPickTrigger, light, "on"));
+    }
+
+    prepareButton(redBox, BABYLON.Color3.Red(), light1);
+    prepareButton(greenBox, BABYLON.Color3.Green(), light2);
+    prepareButton(blueBox, BABYLON.Color3.Blue(), light3);
+
+    // Conditions
+    sphere.actionManager = new BABYLON.ActionManager(scene);
+    var condition1 = new BABYLON.StateCondition(sphere.actionManager, light1, "off");
+    var condition2 = new BABYLON.StateCondition(sphere.actionManager, light1, "on");
+
+    sphere.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnLeftPickTrigger, camera, "alpha", 0, 5000, condition1));
+    sphere.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnLeftPickTrigger, camera, "alpha", Math.PI, 500, condition2));
+
+    // Over/Out
+    var makeOverOut = function (mesh) {
+        mesh.actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOutTrigger, mesh.material, "emissiveColor", mesh.material.emissiveColor));
+        mesh.actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOverTrigger, mesh.material, "emissiveColor", BABYLON.Color3.White()));
+        mesh.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOutTrigger, mesh, "scaling", new BABYLON.Vector3(1, 1, 1), 150));
+        mesh.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOverTrigger, mesh, "scaling", new BABYLON.Vector3(1.1, 1.1, 1.1), 150));
+    }
+
+    makeOverOut(redBox);
+    makeOverOut(greenBox);
+    makeOverOut(blueBox);
+    makeOverOut(sphere);
+
+    // scene's actions
+    scene.actionManager = new BABYLON.ActionManager(scene);
+
+    var rotate = function (mesh) {
+        scene.actionManager.registerAction(new BABYLON.IncrementValueAction(BABYLON.ActionManager.OnEveryFrameTrigger, mesh, "rotation.y", 0.01));
+    }
+
+    rotate(redBox);
+    rotate(greenBox);
+    rotate(blueBox);
+
+    // Intersections
+   /*
+    donut.actionManager = new BABYLON.ActionManager(scene);
+
+    donut.actionManager.registerAction(new BABYLON.SetValueAction(
+        { trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: sphere },
+        donut, "scaling", new BABYLON.Vector3(1.2, 1.2, 1.2)));
+
+    donut.actionManager.registerAction(new BABYLON.SetValueAction(
+        { trigger: BABYLON.ActionManager.OnIntersectionExitTrigger, parameter: sphere }
+        , donut, "scaling", new BABYLON.Vector3(1, 1, 1)));
+*/
+    // Animations
+    var alpha = 0;
+ /*   scene.registerBeforeRender(function () {
+        donut.position.x = 100 * Math.cos(alpha);
+        donut.position.y = 5;
+        donut.position.z = 100 * Math.sin(alpha);
+        alpha += 0.01;
+    });
+*/
+  scene.registerBeforeRender(function () {
+        //sun.position = spot.position;
+        light1.position.x -= 0.5;
+		light2.position.x -= 0.5;
+		light3.position.x -= 0.5;
+        if (light1.position.x < -100) {
+            light1.position.x = 100;
+			light2.position.x = 100;
+			light3.position.x = 100;
+		}
+    });
+
+	//BABYLON.SceneOptimizer.OptimizeAsync(scene);
+
+    return scene;
+}
+		
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+        var scene = createScene();
+
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
 </body>
 </html>
